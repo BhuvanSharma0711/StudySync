@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import UserInfoDto from './dto/userinfo.dto'
 import sendEmail from 'src/handlres/email.global';
 import Redis from 'ioredis';
@@ -108,4 +108,74 @@ export class UserService {
     }
     return { message: 'login successfully' };
   }
+  async getUsersWithSimilarInterests(userId: string) {
+    console.log("Searching for user ID:", userId);
+    const user = await this.prisma.user.findUnique({ where: { id: userId.trim() } });
+    if(!user) {
+      throw new HttpException('user not found',HttpStatus.NOT_FOUND);
+    }
+
+    return this.prisma.user.findMany({
+      where: {
+        id: { not: userId.trim() },
+        interests: { hasSome: user.interests }, // Find users with overlapping interests
+      },
+    });
+  }
+
+  async addUserInterest(body:{ userId: string; interest: string }) {
+    const { userId, interest } = body;
+
+    // Ensure user exists
+    const user = await this.prisma.user.findUnique({ where: { id: userId.trim() } });
+    if (!user) throw new HttpException('user not found',HttpStatus.NOT_FOUND);
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { interests: { push: interest } }, // Correct way to update array fields
+    });
+  }
+  async exportClickData() {
+    return this.prisma.click.findMany({
+      include: { user: true, file: true }
+    });
+  }
+
+  async getAllFiles() {
+    return this.prisma.file.findMany();
+  }
+  async getRecommendedFiles(userId: string): Promise<any> {
+    try {
+      const command = `python scripts/recommend.py ${userId}`;
+      const { stdout, stderr } = await execPromise(command);
+
+      if (stderr) {
+        console.error(`Python Error: ${stderr}`);
+        throw new HttpException('Python script execution failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+      return JSON.parse(stdout);
+    } catch (error) {
+      console.error(`Execution Error: ${error.message}`);
+      throw new HttpException('Failed to fetch recommended files', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  async getUserById(userId: string) {
+    const user = await this.prisma.user.findUnique({where: { id: userId.trim() } });
+  
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+  async getUserRecommendations(userId: string): Promise<any> {
+    try {
+      // Execute Python script and pass userId
+      const { stdout } = await execPromise(`python scripts/recommend-user.py ${userId}`);
+      return JSON.parse(stdout); // Convert the output to JSON
+    } catch (error) {
+      console.error('Error generating recommendations:', error);
+      throw new Error('Failed to generate recommendations');
+    }
+  }  
 }

@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { UserModule } from './api/user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import Redis from 'ioredis';
+import { FilesModule } from './api/files/files.module';
 
 @Module({
-  imports: [UserModule,PrismaModule],
+  imports: [UserModule,PrismaModule,FilesModule],
   controllers: [AppController],
   providers: [AppService,
     {
