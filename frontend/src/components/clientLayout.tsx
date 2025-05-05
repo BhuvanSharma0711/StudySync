@@ -7,7 +7,7 @@ import DashboardLayout from './layouts/DashboardLayout';
 
 function ClientLayout({ children,}: {children: React.ReactNode;}) {
     const pathname = usePathname();
-    const Layout = pathname?.startsWith("/user") ? DashboardLayout : PublicLayout;
+    const Layout = pathname?.startsWith("/dashboard") ? DashboardLayout : PublicLayout;
 
     return <Layout>{children}</Layout>
 }

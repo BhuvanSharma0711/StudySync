@@ -106,7 +106,7 @@ export class UserService {
     if(user?.password!=body.password) {
       throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
     }
-    return { message: 'login successfully' };
+    return {userName : user.name};
   }
   async getUsersWithSimilarInterests(userId: string) {
     console.log("Searching for user ID:", userId);

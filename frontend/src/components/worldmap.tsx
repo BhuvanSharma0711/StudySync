@@ -6,10 +6,10 @@ export function WorldMapDemo() {
     <div className=" py-40 dark:bg-black bg-black w-auto mr-20 ml-20">
       <div className="max-w-7xl mx-auto text-center">
         <p className="font-bold text-xl md:text-4xl dark:text-white text-white relative z-10">
-            Need to connec to colleague
+            Tired of So many events happening
         </p>
         <p className="text-sm md:text-lg text-neutral-500 max-w-2xl mx-auto py-4 relative z-10">
-          Don,t know where to go. What to attend.
+          Don,t know where to go. What to attend. Where to eat. 
         </p>
       </div>
       <WorldMap

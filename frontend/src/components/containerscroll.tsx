@@ -9,9 +9,9 @@ export function HeroScrollDemo({children}:{children:React.ReactNode}) {
         titleComponent={
           <>
             <h1 className="text-4xl font-semibold text-white dark:text-white">
-              We present you peer-peer connection <br />
+              We present you your college assistant <br />
               <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none text-white">
-              StudySync
+              𝒞αмρυѕ✘
               </span>
             </h1>
           </>

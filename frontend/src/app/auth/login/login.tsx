@@ -39,8 +39,8 @@ export function Login() {
         return;
       }
       const data = await response.json();
-      console.log("User registered successfully:", data);
-      router.push("/user");
+      localStorage.setItem("userId", data.userName); 
+      router.push(`/dashboard/${data.userName}`);
     } catch(error) {
       console.error("Error registering user:", error);
     }

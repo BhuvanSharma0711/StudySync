@@ -3,8 +3,8 @@ import "./globals.css";
 import {Providers} from "./providers";
 
 export const metadata = {
-  title: "StudySync",
-  description: "Your AI-powered peer to peer connector",
+  title: "𝒞αмρυѕ✘",
+  description: "Your AI-powered campus guide",
 };
 
 export default function RootLayout({
